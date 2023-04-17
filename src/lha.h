@@ -78,6 +78,10 @@ char *strchr (), *strrchr ();
 # include <grp.h>
 #endif
 
+#if _AMIGA
+# include <proto/dos.h>
+#endif
+
 #if !HAVE_UID_T
 typedef int uid_t;
 #endif

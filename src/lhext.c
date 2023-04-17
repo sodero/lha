@@ -239,6 +239,13 @@ adjust_info(name, hdr)
         utime(name, &utimebuf);
 #endif
 
+#if _AMIGA
+    if (hdr->extend_type == EXTEND_AMIGA)
+    {
+        SetProtection(name, hdr->attribute);
+    }
+    else
+#endif
     if (hdr->extend_type == EXTEND_UNIX
         || hdr->extend_type == EXTEND_OS68K
         || hdr->extend_type == EXTEND_XOSK) {
