@@ -4,5 +4,5 @@ OS4 cross-compile
 2 autoheader
 3 automake -a
 4 autoconf
-5 ./configure --host=ppc-amigaos --disable-iconv --with-tmp-file=no CFLAGS=-DUSE_GNU
+5 ./configure --host=ppc-amigaos --disable-iconv --with-tmp-file=no CFLAGS="-DUSE_GNU -D__USE_INLINE__"
 6 make
