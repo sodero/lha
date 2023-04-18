@@ -80,6 +80,9 @@ char *strchr (), *strrchr ();
 
 #if _AMIGA
 # include <proto/dos.h>
+# if __amigaos4__
+#  include <dos/obsolete.h>
+# endif
 #endif
 
 #if !HAVE_UID_T

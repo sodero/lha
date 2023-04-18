@@ -132,6 +132,12 @@
 #define EXTEND_RUNSER           'R'
 #define EXTEND_AMIGA            'A'
 
+#if _AMIGA
+#define EXTEND_DEFAULT          EXTEND_AMIGA
+#else
+#define EXTEND_DEFAULT          EXTEND_UNIX
+#endif
+
 /* this OS type is not official */
 
 #define EXTEND_TOWNSOS          'T'

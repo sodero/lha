@@ -1460,6 +1460,36 @@ canon_path(char *newpath, char *path, size_t size)
     return newpath - p;         /* string length */
 }
 
+#if _AMIGA
+static LONG
+get_attribute(const char *name)
+{
+    struct FileInfoBlock *fib = (struct FileInfoBlock *)
+           AllocDosObject(DOS_FIB, NULL);
+
+    if(!fib)
+    {
+        return 0;
+    }
+
+    // Attempt to lock file or directory.
+    BPTR lock = (BPTR) Lock(name, ACCESS_READ);
+    LONG attr = 0;
+
+    // Fill up file info block.
+    if(lock && Examine(lock, fib))
+    {
+        attr = fib->fib_Protection;
+    }
+
+    // Unlock and free file info block.
+    FreeDosObject(DOS_FIB, fib);
+    UnLock(lock);
+
+    return attr;
+}
+#endif
+
 void
 init_header(name, v_stat, hdr)
     char           *name;
@@ -1476,13 +1506,17 @@ init_header(name, v_stat, hdr)
 
     hdr->packed_size = 0;
     hdr->original_size = v_stat->st_size;
+#if _AMIGA
+    hdr->attribute = get_attribute(name);
+#else
     hdr->attribute = GENERIC_ATTRIBUTE;
+#endif
     hdr->header_level = header_level;
 
     len = canon_path(hdr->name, name, sizeof(hdr->name));
 
     hdr->crc = 0x0000;
-    hdr->extend_type = EXTEND_UNIX;
+    hdr->extend_type = EXTEND_DEFAULT;
     hdr->unix_last_modified_stamp = v_stat->st_mtime;
     /* since 00:00:00 JAN.1.1970 */
 #ifdef NOT_COMPATIBLE_MODE
@@ -1551,7 +1585,9 @@ init_header(name, v_stat, hdr)
 #endif /* INCLUDE_OWNER_NAME_IN_HEADER */
     if (is_directory(v_stat)) {
         memcpy(hdr->method, LZHDIRS_METHOD, METHOD_TYPE_STORAGE);
+#if !_AMIGA
         hdr->attribute = GENERIC_DIRECTORY_ATTRIBUTE;
+#endif
         hdr->original_size = 0;
         if (len > 0 && hdr->name[len - 1] != '/') {
             if (len < sizeof(hdr->name)-1)
@@ -1565,7 +1601,9 @@ init_header(name, v_stat, hdr)
 #ifdef S_IFLNK
     if (is_symlink(v_stat)) {
         memcpy(hdr->method, LZHDIRS_METHOD, METHOD_TYPE_STORAGE);
+#if !_AMIGA
         hdr->attribute = GENERIC_DIRECTORY_ATTRIBUTE;
+#endif
         hdr->original_size = 0;
         readlink(name, hdr->realname, sizeof(hdr->realname));
     }
@@ -1650,7 +1688,7 @@ write_header_level0(data, hdr, pathname)
         data[I_HEADER_CHECKSUM] = calc_sum(data + I_METHOD, header_size);
     } else {
         /* write old-style extend header */
-        put_byte(EXTEND_UNIX);
+        put_byte(EXTEND_DEFAULT);
         put_byte(CURRENT_UNIX_MINOR_VERSION);
         put_longword(hdr->unix_last_modified_stamp);
         put_word(hdr->unix_mode);
@@ -1700,7 +1738,11 @@ write_header_level1(data, hdr, pathname)
     put_longword(hdr->packed_size);
     put_longword(hdr->original_size);
     put_longword(unix_to_generic_stamp(hdr->unix_last_modified_stamp));
+#if _AMIGA
+    put_byte(hdr->attribute);
+#else
     put_byte(0x20);
+#endif
     put_byte(hdr->header_level); /* level 1 */
 
     /* level 1 header: write filename (basename only) */
@@ -1718,7 +1760,7 @@ write_header_level1(data, hdr, pathname)
     if (generic_format)
         put_byte(0x00);
     else
-        put_byte(EXTEND_UNIX);
+        put_byte(EXTEND_DEFAULT);
 
     /* write extend header from here. */
 
@@ -1792,7 +1834,11 @@ write_header_level2(data, hdr, pathname)
     put_longword(hdr->packed_size);
     put_longword(hdr->original_size);
     put_longword(hdr->unix_last_modified_stamp);
+#if _AMIGA
+    put_byte(hdr->attribute);
+#else
     put_byte(0x20);
+#endif
     put_byte(hdr->header_level); /* level 2 */
 
     put_word(hdr->crc);
@@ -1800,7 +1846,7 @@ write_header_level2(data, hdr, pathname)
     if (generic_format)
         put_byte(0x00);
     else
-        put_byte(EXTEND_UNIX);
+        put_byte(EXTEND_DEFAULT);
 
     /* write extend header from here. */
 
