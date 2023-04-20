@@ -855,8 +855,14 @@ get_header_level0(fp, hdr, data)
     hdr->attribute = get_byte(); /* MS-DOS attribute */
     hdr->header_level = get_byte();
     name_length = get_byte();
+#if _AMIGA
+    i = get_bytes(hdr->name, name_length, sizeof(hdr->name)-2);
+    hdr->name[i] = '\0';
+    hdr->name[i+1] = '\0';
+#else
     i = get_bytes(hdr->name, name_length, sizeof(hdr->name)-1);
     hdr->name[i] = '\0';
+#endif
 
     /* defaults for other type */
     hdr->unix_mode = UNIX_FILE_REGULAR | UNIX_RW_RW_RW;
@@ -979,8 +985,14 @@ get_header_level1(fp, hdr, data)
     hdr->header_level = get_byte();
 
     name_length = get_byte();
+#if _AMIGA
+    i = get_bytes(hdr->name, name_length, sizeof(hdr->name)-2);
+    hdr->name[i] = '\0';
+    hdr->name[i+1] = '\0';
+#else
     i = get_bytes(hdr->name, name_length, sizeof(hdr->name)-1);
     hdr->name[i] = '\0';
+#endif
 
     /* defaults for other type */
     hdr->unix_mode = UNIX_FILE_REGULAR | UNIX_RW_RW_RW;

@@ -623,6 +623,15 @@ cmd_extract()
         pos = ftello(afp);
         if (need_file(hdr.name)) {
             read_size = extract_one(afp, &hdr);
+#if _AMIGA
+        if (hdr.extend_type == EXTEND_AMIGA && (hdr.header_level == 0 ||
+            hdr.header_level == 1)) {
+            const char *com = hdr.name + strlen(hdr.name) + 1;
+            if(*com) {
+                SetComment(hdr.name, com);
+            }
+        }
+#endif
             if (read_size != hdr.packed_size) {
                 /* when error occurred in extract_one(), should adjust
                    point of file stream */
