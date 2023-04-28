@@ -589,7 +589,13 @@ parse_option(int argc, char **argv)
 
     if (cmd_char[1] == '\0') {
         /* argv[1] is command name */
+#if _AMIGA
+        free(argv[1]);
         argv[1] = argv[0];
+        argv[0] = NULL;
+#else
+        argv[1] = argv[0];
+#endif
         argv++;
         argc--;
     }
@@ -605,21 +611,143 @@ parse_option(int argc, char **argv)
     return parse_suboption(argc, argv);
 }
 
+#if _AMIGA
+static void
+free_argv(char **vec, int argc)
+{
+    if(!vec)
+    {
+        return;
+    }
+
+    for(size_t i = 0; i < argc; ++i)
+    {
+        free(vec[i]);
+    }
+
+    free(vec);
+}
+
+static char **
+append_arg(char **vec, size_t *size, const char *str, size_t pos)
+{
+    char **tmp = vec;
+
+    if(pos >= *size || !vec)
+    {
+        size_t new_size = *size ? *size * 2 : pos + 1;
+        tmp = calloc(new_size, sizeof(char *));
+
+        if(!tmp)
+        {
+            free_argv(vec, *size);
+            return NULL;
+        }
+
+        memmove(tmp, vec, *size * sizeof(char *));
+        *size = new_size;
+        free(vec);
+    }
+
+    tmp[pos] = strdup(str);
+
+    if(!tmp[pos])
+    {
+        free_argv(tmp, pos);
+        return NULL;
+    }
+
+    return tmp;
+}
+
+static char **
+expand_argv(int argc, char *argv[], int *argc_x)
+{
+    struct
+    {
+        struct AnchorPath _a;
+        char _b[PATH_MAX + 1];
+    } a_;
+
+    struct AnchorPath *anchor = (struct AnchorPath *) &a_;
+    char **argv_x = NULL;
+    size_t argv_z = 0;
+
+    anchor->ap_Strlen = PATH_MAX;
+    *argc_x = 0;
+
+    for(int i = 0; i < argc; ++i)
+    {
+        int err = MatchFirst(argv[i], anchor);
+
+        if(err)
+        {
+            argv_x = append_arg(argv_x, &argv_z, argv[i], *argc_x);
+
+            if(!argv_x)
+            {
+                MatchEnd(anchor);
+                return NULL;
+            }
+
+            ++(*argc_x);
+        }
+        else
+        {
+            while(!err)
+            {
+                argv_x = append_arg(argv_x, &argv_z, anchor->ap_Buf, *argc_x);
+
+                if(!argv_x)
+                {
+                    MatchEnd(anchor);
+                    return NULL;
+                }
+
+                ++(*argc_x);
+                err = MatchNext(anchor);
+            }
+        }
+        MatchEnd(anchor);
+    }
+
+    return argv_x;
+}
+#endif /* _AMIGA */
+
 /* ------------------------------------------------------------------------ */
 int
+#if _AMIGA
+main(argc_, argv_)
+    int             argc_;
+    char           *argv_[];
+#else
 main(argc, argv)
     int             argc;
     char           *argv[];
+#endif
 {
     char           *p;
 
     int i;
+
+#if _AMIGA
+    int argc;
+    char **argv = expand_argv(argc_, argv_, &argc);
+#endif
+
+    if(!argv) {
+        exit(-1);
+    }
 
     init_variable();        /* Added N.Watazaki */
 
     if (parse_option(argc, argv) == -1) {
         fputs("\n", stderr);
         print_tiny_usage();
+#if _AMIGA
+        free_argv(argv, argc);
+#endif
         exit(2);
     }
 
@@ -627,6 +755,9 @@ main(argc, argv)
         error("archive file does not specified");
         fputs("\n", stderr);
         print_tiny_usage();
+#if _AMIGA
+        free_argv(argv, argc);
+#endif
         exit(2);
     }
 
@@ -696,6 +827,9 @@ main(argc, argv)
         break;
     }
 
+#if _AMIGA
+        free_argv(argv, argc);
+#endif
     if (error_occurred)
         return 1;
     return 0;
