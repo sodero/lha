@@ -1500,6 +1500,36 @@ get_attribute(const char *name)
 
     return attr;
 }
+
+static void
+append_comment(const char *name, char *dest, size_t size)
+{
+    struct FileInfoBlock *fib = (struct FileInfoBlock *)
+           AllocDosObject(DOS_FIB, NULL);
+
+    if(!fib)
+    {
+        return;
+    }
+
+    // Attempt to lock file or directory.
+    BPTR lock = (BPTR) Lock(name, ACCESS_READ);
+
+    // Fill up file info block.
+    if(lock && Examine(lock, fib))
+    {
+        strncpy(dest, fib->fib_Comment, size);
+    }
+    else
+    {
+        // Always have a valid comment string.
+        *dest = '\0';
+    }
+
+    // Unlock and free file info block.
+    FreeDosObject(DOS_FIB, fib);
+    UnLock(lock);
+}
 #endif
 
 void
@@ -1620,6 +1650,9 @@ init_header(name, v_stat, hdr)
         readlink(name, hdr->realname, sizeof(hdr->realname));
     }
 #endif
+#if _AMIGA
+    append_comment(hdr->name, hdr->name + len + 1, sizeof(hdr->name) - len - 2);
+#endif
 }
 
 static void
@@ -1681,6 +1714,10 @@ write_header_level0(data, hdr, pathname)
 
     /* write pathname (level 0 header contains the directory part) */
     name_length = strlen(pathname);
+#if _AMIGA
+    /* Include file comment */
+    name_length += strlen(pathname + name_length + 1) + 1;
+#endif
     if (generic_format)
         limit = 255 - I_GENERIC_HEADER_SIZE + 2;
     else
@@ -1741,6 +1778,10 @@ write_header_level1(data, hdr, pathname)
         dir_length = 0;
     }
 
+#if _AMIGA
+    /* Include file comment */
+    name_length += strlen(basename + name_length + 1) + 1;
+#endif
     setup_put(data);
     memset(data, 0, LZHEADER_STORAGE);
 
@@ -1838,6 +1879,10 @@ write_header_level2(data, hdr, pathname)
         dir_length = 0;
     }
 
+#if _AMIGA
+    /* Include file comment */
+    name_length += strlen(basename + name_length + 1) + 1;
+#endif
     setup_put(data);
     memset(data, 0, LZHEADER_STORAGE);
 
@@ -1948,7 +1993,11 @@ write_header(fp, hdr)
             error("file name is too long (%s -> %s)", hdr->name, hdr->realname);
     }
     else {
+#if _AMIGA
+        memcpy(pathname, hdr->name, sizeof(pathname));
+#else
         strncpy(pathname, hdr->name, sizeof(pathname));
+#endif
         pathname[sizeof(pathname)-1] = 0;
     }
 
