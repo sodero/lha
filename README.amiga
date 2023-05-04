@@ -1,0 +1,9 @@
+Cross compiling
+---------------
+1: aclocal
+2: autoheader
+3: automake -a
+4: autoconf
+5: (OS4) ./configure --host=ppc-amigaos --disable-iconv --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-DUSE_OLD_ANCHORPATH -DUSE_GNU -D__USE_INLINE__"
+5: (AROS) ./configure --host=i386-aros --disable-iconv --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-DUSE_GNU" LIBS="-lposixc -lstdcio -lstdc"
+6: make
