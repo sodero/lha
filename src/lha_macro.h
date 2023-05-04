@@ -7,8 +7,12 @@
 /*  Ver. 1.14g  modified                        2000.05.06  T.OKAMOTO       */
 /* ------------------------------------------------------------------------ */
 
-#define FALSE           0
-#define TRUE            1
+#ifndef FALSE
+# define FALSE           0
+#endif
+#ifndef TRUE
+# define TRUE            1
+#endif
 
 #define FILENAME_LENGTH 1024
 
