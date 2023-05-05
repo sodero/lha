@@ -722,7 +722,7 @@ expand_argv(int argc, char *argv[], int *argc_x)
 
 /* ------------------------------------------------------------------------ */
 int
-#if _AMIGA
+#if defined(_AMIGA) && defined(EXPAND_WILDCARDS)
 main(argc_, argv_)
     int             argc_;
     char           *argv_[];
@@ -736,7 +736,7 @@ main(argc, argv)
 
     int i;
 
-#if _AMIGA
+#if defined(_AMIGA) && defined(EXPAND_WILDCARDS)
     int argc;
     char **argv = expand_argv(argc_, argv_, &argc);
 #endif
@@ -750,7 +750,7 @@ main(argc, argv)
     if (parse_option(argc, argv) == -1) {
         fputs("\n", stderr);
         print_tiny_usage();
-#if _AMIGA
+#if defined(_AMIGA) && defined(EXPAND_WILDCARDS)
         free_argv(argv, argc);
 #endif
         exit(2);
@@ -760,7 +760,7 @@ main(argc, argv)
         error("archive file does not specified");
         fputs("\n", stderr);
         print_tiny_usage();
-#if _AMIGA
+#if defined(_AMIGA) && defined(EXPAND_WILDCARDS)
         free_argv(argv, argc);
 #endif
         exit(2);
@@ -832,7 +832,7 @@ main(argc, argv)
         break;
     }
 
-#if _AMIGA
+#if defined(_AMIGA) && defined(EXPAND_WILDCARDS)
         free_argv(argv, argc);
 #endif
     if (error_occurred)
