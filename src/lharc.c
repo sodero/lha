@@ -641,7 +641,7 @@ append_arg(char **vec, size_t *size, const char *str, size_t pos)
     if(pos >= *size || !vec)
     {
         size_t new_size = *size ? *size * 2 : pos + 1;
-        tmp = calloc(new_size, sizeof(char *));
+        tmp = calloc(new_size + 1, sizeof(char *));
 
         if(!tmp)
         {
