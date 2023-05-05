@@ -231,7 +231,7 @@ char *
 xstrchr(const char *s, int c)
 {
     if (c == 0)
-        return s + strlen(s);
+        return (char*)s + strlen(s);
 
     while (*s) {
         if ((unsigned char)*s == (unsigned char)c)
