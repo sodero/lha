@@ -516,7 +516,7 @@ parse_option(int argc, char **argv)
 {
     char *cmd_char;
 
-    if (argv[1] == NULL || strcmp(argv[1], "--help") == 0) {
+    if (argc < 2 || argv[1] == NULL || strcmp(argv[1], "--help") == 0) {
         print_usage();
         exit(0);
     }
