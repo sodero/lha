@@ -597,8 +597,7 @@ parse_option(int argc, char **argv)
         /* argv[1] is command name */
 #if _AMIGA
         free(argv[1]);
-        argv[1] = argv[0];
-        argv[0] = NULL;
+        argv[1] = strdup(argv[0]);
 #else
         argv[1] = argv[0];
 #endif
