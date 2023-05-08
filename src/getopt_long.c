@@ -270,7 +270,7 @@ has_argument(char *arg,
 }
 
 int
-getopt_long(int argc, char **argv,
+getopt_long_lha(int argc, char **argv,
             const char *shortopts,
             struct option *longopts,
             int *indexptr)

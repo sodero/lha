@@ -42,7 +42,9 @@ struct option {
 extern char *optarg;
 extern int optind;
 
-int getopt_long(int argc, char **argv,
+int getopt_long_lha(int argc, char **argv,
                 const char *shortopts,
                 struct option *longopts,
                 int *indexptr);
+
+#define getopt_long(...) getopt_long_lha(__VA_ARGS__)
