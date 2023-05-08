@@ -467,6 +467,13 @@ extract_one(afp, hdr)
             unlink(name);
             remove_extracting_file_when_interrupt = TRUE;
 
+#if _AMIGA
+            if (hdr->original_size == 0 && *name &&
+                name[strlen(name) - 1] == '/') {
+                make_parent_path(name); /* create directory only */
+                return read_size;
+            }
+#endif
             if ((fp = open_with_make_path(name)) != NULL) {
 #if HAVE_LIBAPPLEFILE
                 if (hdr->extend_type == EXTEND_MACOS && !verify_mode && decode_macbinary_contents) {
