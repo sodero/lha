@@ -68,11 +68,7 @@ init_variable()     /* Added N.Watazaki */
 
     compress_method = DEFAULT_LZHUFF_METHOD; /* defined in config.h */
 
-#if _AMIGA
-    header_level    = 1;        /* Use default header level 1 on Amiga */
-#else
     header_level    = 2;        /* level 2 */
-#endif
     quiet_mode      = 0;
 
 #ifdef EUC
