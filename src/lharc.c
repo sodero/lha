@@ -124,7 +124,7 @@ static void
 print_tiny_usage()
 {
     fprintf(stdout, "\
-usage: lha [-]<commands>[<options>] [-<options> ...] archive_file [file...]\n\
+usage: lha [-]<commands>[<options>] [-<options> ...] archive_file [file...] [target dir]\n\
   commands:  [axelvudmcpt]\n\
   options:   [q[012]vnfto[567]dizg012%s%s[w=<dir>|x=<pattern>]]\n\
   long options: --system-kanji-code={euc,sjis,utf8,cap}\n\
@@ -498,6 +498,20 @@ parse_suboption(int argc, char **argv)
         argc--;
     }
 
+#if _AMIGA
+    if (argc && *argv && cmd == CMD_EXTRACT && !output_to_stdout &&
+        !verify_mode)
+    {
+        char last = (*argv)[strlen(*argv) - 1];
+
+        if (last == '/' || last == ':')
+        {
+            extract_directory = *argv++;
+            argc--;
+        }
+    }
+#endif
+
     cmd_filec = argc;
     cmd_filev = argv;
 
@@ -679,9 +693,11 @@ expand_argv(int argc, char *argv[], int *argc_x)
 
     for(int i = 0; i < argc; ++i)
     {
+        size_t len = strlen(argv[i]);
         int err = MatchFirst(argv[i], anchor);
 
-        if(err)
+        if (err || (len && argv[i][len - 1] == '/' &&
+            strncmp(argv[i], anchor->ap_Buf, len - 1) == 0))
         {
             argv_x = append_arg(argv_x, &argv_z, argv[i], *argc_x);
 

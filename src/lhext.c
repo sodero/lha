@@ -91,8 +91,19 @@ make_name_with_pathcheck(char *name, size_t namesz, const char *q)
     int sz;
     struct stat stbuf;
 
-    if (extract_directory) {
+    if (extract_directory && *extract_directory) {
+#if _AMIGA
+        char last = extract_directory[strlen(extract_directory) - 1];
+
+        if(last == '/' || last == ':') {
+            sz = xsnprintf(name, namesz, "%s", extract_directory);
+        }
+        else {
+            sz = xsnprintf(name, namesz, "%s/", extract_directory);
+        }
+#else
         sz = xsnprintf(name, namesz, "%s/", extract_directory);
+#endif
         if (sz == -1) {
             return FALSE;
         }
