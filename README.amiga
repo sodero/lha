@@ -4,7 +4,7 @@ Cross compiling
 2: autoheader
 3: automake -a
 4: autoconf
-5: ./configure --host=ppc-amigaos --disable-iconv --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-D_XOPEN_SOURCE -DUSE_OLD_ANCHORPATH -D__USE_INLINE__ -DEXPAND_WILDCARDS"
-5: ./configure --host=i386-aros --disable-iconv --disable-largefile --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-DEXPAND_WILDCARDS"
-5: ./configure --host=ppc-morphos --disable-iconv --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-D__IXEMUL_EXEC_MIXING_ALLOWED -DEXPAND_WILDCARDS"
+5: (AROS) ./configure --host=i386-aros --disable-iconv --disable-largefile --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-DEXPAND_WILDCARDS"
+5: (OS4) ./configure --host=ppc-amigaos --disable-iconv --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-D_XOPEN_SOURCE -DUSE_OLD_ANCHORPATH -D__USE_INLINE__ -DEXPAND_WILDCARDS"
+5: (MorphOS) ./configure --host=ppc-morphos --disable-iconv --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-D__IXEMUL_EXEC_MIXING_ALLOWED -DEXPAND_WILDCARDS"
 6: make
