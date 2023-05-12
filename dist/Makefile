@@ -1,5 +1,5 @@
 LHa_4U4A-i386-aros.lha: lha LHa_4U4A.guide LHa_4U4A.guide.info
-	lha a $@ $^
+	lha ao5 $@ $^
 
 lha: ../src/lha
 	cp $< $@
