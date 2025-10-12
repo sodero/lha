@@ -149,6 +149,19 @@ usage: lha [-]<commands>[<options>] [-<options> ...] archive_file [file...] [tar
             );
 }
 
+#define STY(X) #X
+#define STR(X) STY(X)
+
+static char version[] __attribute__((used)) =
+    "\0$VER: LHa for UNIX for AROS "
+#ifdef __amigaos4__
+    "for AmigaOS "
+#endif
+#ifdef __MORPHOS__
+    "for MorphOS "
+#endif
+    STR(__VER__) " (" STR(__DAY__) ")";
+
 static void
 print_usage()
 {

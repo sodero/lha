@@ -2,7 +2,7 @@ Short:        LHa for UNIX for AROS
 Author:       Y.Tagawa et al.
 Uploader:     rolfkopman@gmail.com (Ola Söder)
 Type:         util/arc
-Architecture: i386-aros
+Architecture: __ARC__
 URL:          https://github.com/sodero/lha
 Version:      1.14i
 Distribution: Aminet
