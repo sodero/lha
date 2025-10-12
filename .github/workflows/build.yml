@@ -41,8 +41,7 @@ jobs:
         docker run --rm \
           -v ${{ github.workspace }}:${{ matrix.platform.mount }} \
           -w ${{ matrix.platform.mount }} \
-          -e BUILD=${{ matrix.build-type }} \
           ${{ matrix.platform.image }} \
-          /bin/sh -e 'aclocal && autoheader && automake -a && autoconf && \
+          /bin/sh -c "aclocal && autoheader && automake -a && autoconf && \
           DAY=$(date +%d.%m.%Y) TAG=$(git describe --tags --abbrev=0) && \
-          ./configure ${{ matrix.platform.cfg }}'
+          ./configure ${{ matrix.platform.cfg }}"
