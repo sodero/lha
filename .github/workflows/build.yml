@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.build-type }} - ${{ matrix.platform.name }}
+    name: ${{ matrix.platform.name }}
     runs-on: ubuntu-latest
 
     strategy:
