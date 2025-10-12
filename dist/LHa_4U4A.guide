@@ -27,7 +27,7 @@ Unixdklsfjiss.
 @TOC "Main"
 @{B}Changelog@{UB}
 
-2025-10-12 - 1.14i.2
+2025-10-12 - 1.14i.0
 - AROS 32/64-bit, AmigaOS4 and MorphOS support.
 - Proper Amiga version string.
 
