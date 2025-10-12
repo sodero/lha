@@ -1,0 +1,55 @@
+name: AmigaOS4/AROS/MorphOS release build
+
+on:
+  push:
+    tags:
+      - '[0-9]*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.platform.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform:
+          - name: AmigaOS4
+            image: rolfkopman/os4env
+            mount: /opt/code
+            script: amigaos4.sh
+          - name: AROS i386 ABI V0
+            image: rolfkopman/arosi386v0env
+            mount: /opt/code
+            script: aros_i386.sh
+          - name: AROS x86_64 ABI V1
+            image: rolfkopman/arosx64v1env
+            mount: /opt/code
+            script: aros_x86_64.sh
+          - name: MorphOS
+            image: rolfkopman/mosenv
+            mount: /gg/code
+            script: morphos.sh
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+          fetch-depth: 0
+          fetch-tags: true
+
+    - name: Compile
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}:${{ matrix.platform.mount }} \
+          -w ${{ matrix.platform.mount }} \
+          ${{ matrix.platform.image }} \
+          cicd/${{ matrix.platform.script }}
+
+    - name: Publish release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: dist/tmp/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
