@@ -18,19 +18,19 @@ jobs:
           - name: AmigaOS4
             image: rolfkopman/os4env
             mount: /opt/code
-            cfg: --host=ppc-amigaos --disable-iconv --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-D_XOPEN_SOURCE -DUSE_OLD_ANCHORPATH -D__USE_INLINE__ -DEXPAND_WILDCARDS -D__VER__=$TAG -D__DAY__=$DAY"
+            cfg: --host=ppc-amigaos --disable-iconv --with-tmp-file=no --with-additional-suffixes='lha,' CFLAGS='-D_XOPEN_SOURCE -DUSE_OLD_ANCHORPATH -D__USE_INLINE__ -DEXPAND_WILDCARDS -D__VER__=$TAG -D__DAY__=$DAY'
           - name: AROS i386 ABI V0
             image: rolfkopman/arosi386v0env
             mount: /opt/code
-            cfg: --host=i386-aros --disable-iconv --disable-largefile --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-DEXPAND_WILDCARDS -D__VER__=$TAG -D__DAY__=$DAY"
+            cfg: --host=i386-aros --disable-iconv --disable-largefile --with-tmp-file=no --with-additional-suffixes='lha,' CFLAGS='-DEXPAND_WILDCARDS -D__VER__=$TAG -D__DAY__=$DAY'
           - name: AROS x86_64 ABI V1
             image: rolfkopman/arosx64v1env
             mount: /opt/code
-            cfg: --host=x86_64-aros --disable-iconv --disable-largefile --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-DEXPAND_WILDCARDS -D__VER__=$TAG -D__DAY__=$DAY"
+            cfg: --host=x86_64-aros --disable-iconv --disable-largefile --with-tmp-file=no --with-additional-suffixes='lha,' CFLAGS='-DEXPAND_WILDCARDS -D__VER__=$TAG -D__DAY__=$DAY'
           - name: MorphOS
             image: rolfkopman/mosenv
             mount: /gg/code
-            cfg: --host=ppc-morphos --disable-iconv --with-tmp-file=no --with-additional-suffixes="lha," CFLAGS="-D__IXEMUL_EXEC_MIXING_ALLOWED -DEXPAND_WILDCARDS -D__VER__=$TAG -D__DAY__=$DAY"
+            cfg: --host=ppc-morphos --disable-iconv --with-tmp-file=no --with-additional-suffixes='lha,' CFLAGS='-D__IXEMUL_EXEC_MIXING_ALLOWED -DEXPAND_WILDCARDS -D__VER__=$TAG -D__DAY__=$DAY'
 
     steps:
     - name: Checkout code
