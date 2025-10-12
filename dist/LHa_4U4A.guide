@@ -1,7 +1,7 @@
 @DATABASE "Default"
 @NODE Main "LHa-4U4A Guide"
 @TOC Contents
-@$VER: LHa-4U4A.guide 1.14i (23.NOT.YET) english
+@$VER: LHa-4U4A.guide 1.14i.2 (25.10.12) english
 @{B}Contents@{UB}
 
 @{" Introduction     " LINK "Introduction"} What's LHa for Unix for AROS?
@@ -27,7 +27,11 @@ Unixdklsfjiss.
 @TOC "Main"
 @{B}Changelog@{UB}
 
-2023-05-19
+2025-10-12 - 1.14i.2
+- AROS 32/64-bit, AmigaOS4 and MorphOS support.
+- Proper Amiga version string.
+
+2023-05-19 - 1.14i
 - Initial dump.
 @ENDNODE
 
