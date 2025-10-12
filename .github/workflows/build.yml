@@ -44,4 +44,4 @@ jobs:
           ${{ matrix.platform.image }} \
           /bin/sh -c "aclocal && autoheader && automake -a && autoconf && \
           DAY=$(date +%d.%m.%Y) TAG=$(git describe --tags --abbrev=0) && \
-          ./configure ${{ matrix.platform.cfg }}"
+          ./configure ${{ matrix.platform.cfg }} && make -C dist"
