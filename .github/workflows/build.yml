@@ -2,9 +2,9 @@ name: AmigaOS4/AROS/MorphOS build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ amiga ]
   pull_request:
-    branches: [ master ]
+    branches: [ amiga ]
   workflow_dispatch:
 
 jobs:
@@ -43,5 +43,6 @@ jobs:
           -w ${{ matrix.platform.mount }} \
           -e BUILD=${{ matrix.build-type }} \
           ${{ matrix.platform.image }} \
+          aclocal && autoheader && automake -a && autoconf && \
           DAY=$(date +%d.%m.%Y) TAG=$(git describe --tags --abbrev=0) && \
           ./configure ${{ matrix.platform.cfg }}
