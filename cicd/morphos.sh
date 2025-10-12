@@ -1,10 +1,10 @@
 #!/bin/sh
 
-DAY=$(date +%d.%m.%Y)
+DAY=`date +%d.%m.%Y`
 
 git config --global --add safe.directory /gg/code
 
-TAG=$(git describe --tags --abbrev=0)
+TAG=`git describe --tags --abbrev=0`
 
 env
 
