@@ -6,6 +6,8 @@ git config --global --add safe.directory /gg/code
 
 TAG=$(git describe --tags --abbrev=0)
 
+env
+
 aclocal
 autoheader
 automake -a
