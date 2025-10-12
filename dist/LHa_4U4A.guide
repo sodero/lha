@@ -1,7 +1,7 @@
 @DATABASE "Default"
 @NODE Main "LHa-4U4A Guide"
 @TOC Contents
-@$VER: LHa-4U4A.guide 1.14i.2 (25.10.12) english
+@$VER: LHa-4U4A.guide 1.14i.0 (25.10.12) english
 @{B}Contents@{UB}
 
 @{" Introduction     " LINK "Introduction"} What's LHa for Unix for AROS?
