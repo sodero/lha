@@ -51,7 +51,7 @@ jobs:
     - name: Install LFTP
       run: sudo apt-get install -y lftp
 
-    - name: Upload to Aminet
+    - name: Upload to FTP
       env:
         FTP_HOST: ${{ secrets.FTP_SERVER }}
         FTP_USER: ${{ secrets.FTP_USERNAME }}
