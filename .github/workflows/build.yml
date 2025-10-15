@@ -59,6 +59,7 @@ jobs:
         lftp -c "
         set ssl:verify-certificate no;
         open -u $FTP_USER,$FTP_PASS $FTP_HOST;
-        mirror -R --verbose --delete ./dist/tmp /;
+        mput ./dist/tmp/*.lha;
+        mput ./dist/tmp/*.readme;
         bye
         "
