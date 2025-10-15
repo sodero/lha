@@ -56,4 +56,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/tmp/
           server-dir: /
-          dry-run: false
+          state-name: .ftp-deploy-sync-state.json
