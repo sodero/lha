@@ -50,14 +50,15 @@ jobs:
           -w ${{ matrix.platform.mount }} \
           ${{ matrix.platform.image }} \
           cicd/${{ matrix.platform.script }}
-
-    - name: Upload files to FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/tmp/
-          server-dir: /
-          state-name: /.ftp-deploy-sync-state.json
-          dangerous-clean-slate: true
+    - name: Upload via LFTP
+      env:
+        FTP_HOST: ${{ secrets.FTP_SERVER }}
+        FTP_USER: ${{ secrets.FTP_USERNAME }}
+        FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+      run: |
+        lftp -c "
+        set ssl:verify-certificate no;
+        open -u $FTP_USER,$FTP_PASS $FTP_HOST;
+        mirror -R --verbose --delete ./dist/tmp /;
+        bye
+        "
