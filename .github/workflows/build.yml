@@ -40,9 +40,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-    - name: Install LFTP
-      run: sudo apt-get install -y lftp
-
     - name: Compile
       run: |
         docker run --rm \
@@ -50,7 +47,11 @@ jobs:
           -w ${{ matrix.platform.mount }} \
           ${{ matrix.platform.image }} \
           cicd/${{ matrix.platform.script }}
-    - name: Upload via LFTP
+
+    - name: Install LFTP
+      run: sudo apt-get install -y lftp
+
+    - name: Upload to Aminet
       env:
         FTP_HOST: ${{ secrets.FTP_SERVER }}
         FTP_USER: ${{ secrets.FTP_USERNAME }}
