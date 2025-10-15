@@ -110,6 +110,9 @@ init_variable()     /* Added N.Watazaki */
     sort_contents = TRUE;
     recursive_archiving = TRUE;
     dump_lzss = FALSE;
+
+    *iconv_code_system  = '\0';
+    *iconv_code_archive = '\0';
 }
 
 /* ------------------------------------------------------------------------ */
@@ -127,8 +130,8 @@ print_tiny_usage()
 usage: lha [-]<commands>[<options>] [-<options> ...] archive_file [file...] [target dir]\n\
   commands:  [axelvudmcpt]\n\
   options:   [q[012]vnfto[567]dizg012%s%s[w=<dir>|x=<pattern>]]\n\
-  long options: --system-kanji-code={euc,sjis,utf8,cap}\n\
-                --archive-kanji-code={euc,sjis,utf8,cap}\n\
+  long options: --system-kanji-code={euc,sjis,utf8,latin1,cap}\n\
+                --archive-kanji-code={euc,sjis,utf8,latin1,cap}\n\
                 --extract-broken-archive\n\
                 --convert-filename-case\n\
                 --ignore-mac-files\n\
@@ -426,9 +429,21 @@ parse_suboption(int argc, char **argv)
             else if (strcmp(optarg, "cap") == 0) {
                 optional_system_kanji_code = CODE_CAP;
             }
+            else if (strcmp(optarg, "latin1") == 0) {
+                optional_system_kanji_code = CODE_LATIN1;
+            }
             else {
+#if USE_ICONV
+                if (!is_valid_kanji_code(optarg)) {
+                    error("unknown kanji code \"%s\"", optarg);
+                    return -1;
+                }
+                optional_system_kanji_code = CODE_OTHER;
+                strncpy(iconv_code_system, optarg, FILENAME_LENGTH);
+#else
                 error("unknown kanji code \"%s\"", optarg);
                 return -1;
+#endif
             }
             break;
 
@@ -450,9 +465,21 @@ parse_suboption(int argc, char **argv)
             else if (strcmp(optarg, "cap") == 0) {
                 optional_archive_kanji_code = CODE_CAP;
             }
+            else if (strcmp(optarg, "latin1") == 0) {
+                optional_archive_kanji_code = CODE_LATIN1;
+            }
             else {
+#if USE_ICONV
+                if (!is_valid_kanji_code(optarg)) {
+                    error("unknown kanji code \"%s\"", optarg);
+                    return -1;
+                }
+                optional_archive_kanji_code = CODE_OTHER;
+                strncpy(iconv_code_archive, optarg, FILENAME_LENGTH);
+#else
                 error("unknown kanji code \"%s\"", optarg);
                 return -1;
+#endif
             }
             break;
 
@@ -1605,6 +1632,10 @@ inquire(msg, name, selective)
         fflush(stderr);
 
         fgets(buffer, 1024, stdin);
+        if (feof(stdin)) { /* ^D is entered */
+            clearerr(stdin);
+            fprintf(stderr, "\n");
+        }
 
         for (p = selective; *p; p++)
             if (buffer[0] == *p)

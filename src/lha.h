@@ -222,7 +222,7 @@ int fnmatch(const char *pattern, const char *string, int flags);
 
 struct encode_option {
 #if defined(__STDC__) || defined(AIX)
-    void            (*output) ();
+    void            (*output) (unsigned int code, unsigned int pos);
     void            (*encode_start) ();
     void            (*encode_end) ();
 #else
@@ -363,6 +363,9 @@ EXTERN int      archive_file_mode;
 EXTERN int      archive_file_gid;
 
 EXTERN int      convertcase;    /* 2000.10.6 */
+
+EXTERN char     iconv_code_system[FILENAME_LENGTH];
+EXTERN char     iconv_code_archive[FILENAME_LENGTH];
 
 /* slide.c */
 EXTERN int      unpackable;

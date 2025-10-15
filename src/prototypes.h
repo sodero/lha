@@ -38,7 +38,7 @@ void sjis2euc(int *p1, int *p2);
 int cap_to_sjis(char *dst, const char *src, size_t dstsize);
 int sjis_to_cap(char *dst, const char *src, size_t dstsize);
 /* huf.c */
-void output_st1(int c, int p);
+void output_st1(unsigned int c, unsigned int p);
 unsigned char *alloc_buf(void);
 void encode_start_st1(void);
 void encode_end_st1(void);
@@ -138,6 +138,7 @@ void hist_update(unsigned char data);
 /* support_utf8.c */
 char *conv_to_utf8(char *dst, const char *src, size_t dstsize, int from_code);
 char *conv_from_utf8(char *dst, const char *src, size_t dstsize, int to_code);
+boolean is_valid_kanji_code(char *enc);
 
 /* util.c */
 #if !HAVE_MEMMOVE
