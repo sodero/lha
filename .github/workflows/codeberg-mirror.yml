@@ -3,6 +3,7 @@ name: Codeberg mirror
 on:
   push:
     branches:
+      - amiga
       - master
 
 jobs:

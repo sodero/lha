@@ -2,7 +2,9 @@ name: SourceForge mirror
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - amiga
+      - master
 
 jobs:
   mirror:
