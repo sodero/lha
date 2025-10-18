@@ -12,8 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Setup SSH
         env:
@@ -41,5 +39,6 @@ jobs:
       - name: Push to SourceForge
         run: |
           git remote add sf ssh://${{ secrets.SF_USERNAME }}@git.code.sf.net/p/${{ secrets.SF_REPO }}/code || true
+          git push sf amiga
           git push sf master
           git push sf --tags
