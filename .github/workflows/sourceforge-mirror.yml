@@ -39,6 +39,5 @@ jobs:
       - name: Push to SourceForge
         run: |
           git remote add sf ssh://${{ secrets.SF_USERNAME }}@git.code.sf.net/p/${{ secrets.SF_REPO }}/code || true
-          git push sf amiga
-          git push sf master
+          git push codeberg ${{ github.ref_name }}
           git push sf --tags
