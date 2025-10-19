@@ -11,7 +11,9 @@ jobs:
     environment: sfenv
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
       - uses: actions/checkout@v3
+          fetch-depth: 0
 
       - name: Setup SSH
         env:
@@ -39,5 +41,5 @@ jobs:
       - name: Push to SourceForge
         run: |
           git remote add sf ssh://${{ secrets.SF_USERNAME }}@git.code.sf.net/p/${{ secrets.SF_REPO }}/code || true
-          git push sf ${{ github.ref_name }}
-          git push sf --tags
+          git push sf ${{ github.ref_name }} --force
+          git push sf --tags --force
