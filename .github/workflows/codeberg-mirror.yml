@@ -42,5 +42,5 @@ jobs:
       - name: Push to Codeberg
         run: |
           git remote add codeberg git@codeberg.org:${{ secrets.CB_USERNAME }}/${{ secrets.CB_REPO }}.git || true
-          git push codeberg master
+          git push codeberg --all
           git push codeberg --tags
